@@ -122,7 +122,7 @@ function endGame ()
   bird:removeEventListener("collision", bird)
   Runtime:removeEventListener("enterFrame", onUpdate)
   background:removeEventListener("touch", flapBird)
-  local text = display.newText("У тебя рука в говне", 160, 100, font, 32)
+  local text = display.newText("У тебя рука в derme навсегда", 160, 100, font, 32)
   text:setFillColor(0,0,0)
 end
 
