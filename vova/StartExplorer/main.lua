@@ -98,12 +98,12 @@ ship.myName="ship"
 
 -- Отображение жизень и очков
 livesText = display.newText(uiGroup, "Жизни: " .. lives, 240, 80, native.systemFont, 36)
-ScoreText = display.newText(uiGroup, "Счет: " .. score, 400, 80, native.systemFont, 36)
+ScoreText = display.newText(uiGroup, "Score: " .. score, 400, 80, native.systemFont, 36)
 
 -- Функция для обновления переменных liveText и scoreText
 local function updateText()
   livesText.text = "Жизни: " .. lives
-  scoreText.text = "Счет: " .. score
+  scoreText.text = "Score: " .. score
 end
 
 -- Функция для генерации астероидов
@@ -173,6 +173,92 @@ local function dragShip (event)
   end
   return true -- Предотвращает касания нежелательных объектов, важно если много объектов
 end
+
+ship:addEventListener("touch", dragShip) -- При косании вызывает функцию перетаскивания корабля
+
+-- Функция игрового цикла
+local function gameLoop()
+  --Создание нового астероида
+  createAsteroid()
+
+  --Удаление астероидов, улетевших за край экрана
+  for i = #asteroidTable, 1, -1 do
+    local thisAsteroid = asteroidTable[i] -- для каждой итерации обновляем ссылку на конкретный астероид
+    -- Набор условий, когда астероид вышел за пределы экрана
+    if (thisAsteroid.x < -100 or
+        thisAsteroid.x > display.contentWidth + 100 or
+        thisAsteroid.y < -100 or
+        thisAsteroid.y > display.contentHeight +100)
+    then
+        display.remove(thisAsteroid)  -- Удаление астероида с экрана
+        table.remove(asteroidTable, i) -- Удаление астероида из таблицы
+    end
+  end
+end
+
+gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
+
+-- Функция восстановление корабля
+local function restoreShip()
+  ship.isBodyActive = false --Отключает симуляцию физики для корабля
+  ship.x = display.contentCenterX
+  ship.y = display.contentHeight - 100
+
+  --Мерцание корабля
+  transition.to(ship, {alpha=1, time=4000, --Становится непрозрачным через 4с
+      onComplete = function()
+        ship.isBodyActive = true --Возвращение физики для корабля
+        died = false --Отмена смерти после возрожения
+      end
+    })
+end
+
+local function onCollision(event)
+
+  if (event.phase == "began") then
+
+    local obj1 = event.object1
+    local obj2 = event.object2
+
+    if (( obj1.myName == "laser" and obj2.myName == "asteroid") or
+        ( obj1.myName == "asteroid" and obj2.myName == "laser"))
+    then
+      -- Удаляет столкнувшиеся астероид и лазер
+      display.remove(obj1)
+      display.remove(obj2)
+
+      for i = #asteroidTable, 1, -1 do
+        if (asteroidTable[i] == obj1 or asteroidTable[i] == obj2) then
+          table.remove (asteroidTable, i)
+          break
+        end
+      end
+      -- Увеличивает очки
+      score = score + 100
+      scoreText.text = "Score: " .. score
+
+    elseif ((obj1.myName == "ship" and obj2.myName == "asteroid") or
+            (obj1.myName == "asteroid" and obj2.myName == "ship"))
+    then
+      if (died == false) then
+        died = true
+
+        -- Уменьщает жизни при смерти
+        lives = lives - 1
+        livesText.text = "Жизни: " .. lives
+        -- Проверка оставшихся жизней
+        if (lives == 0) then
+          display.remove(ship)
+        else
+          ship.alpha = 0
+          timer.performWithDelay(1000, restoreShip)
+        end
+      end
+    end
+  end
+end
+
+Runtime:addEventListener("collision", onCollision)
 
 -- Скрыть статус бар
 display.setStatusBar(display.HiddenStatusBar)
