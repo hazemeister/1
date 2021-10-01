@@ -79,6 +79,7 @@ local gameLoopTimer
 local livesText
 local scoreText
 
+--error test
 -- Установка групп отображения
 local backGroup = display.newGroup() -- Группа отображения для задников
 local mainGroup = display.newGroup() -- Группа отображения основных объектов
@@ -98,12 +99,12 @@ ship.myName="ship"
 
 -- Отображение жизень и очков
 livesText = display.newText(uiGroup, "Жизни: " .. lives, 240, 80, native.systemFont, 36)
-ScoreText = display.newText(uiGroup, "Score: " .. score, 400, 80, native.systemFont, 36)
+scoreText = display.newText(uiGroup, "Счет: " .. score, 400, 80, native.systemFont, 36)
 
 -- Функция для обновления переменных liveText и scoreText
 local function updateText()
   livesText.text = "Жизни: " .. lives
-  scoreText.text = "Score: " .. score
+  scoreText.text = "Счет: " .. score
 end
 
 -- Функция для генерации астероидов
@@ -234,8 +235,8 @@ local function onCollision(event)
         end
       end
       -- Увеличивает очки
-      score = score + 100
-      scoreText.text = "Score: " .. score
+      score = score + 1
+      scoreText.text = "Счет: " .. score
 
     elseif ((obj1.myName == "ship" and obj2.myName == "asteroid") or
             (obj1.myName == "asteroid" and obj2.myName == "ship"))
@@ -258,7 +259,7 @@ local function onCollision(event)
   end
 end
 
-Runtime:addEventListener("collision", onCollision)
+Runtime:addEventListener("collision", onCollision) -- запуск функции при событии collision
 
 -- Скрыть статус бар
 display.setStatusBar(display.HiddenStatusBar)
