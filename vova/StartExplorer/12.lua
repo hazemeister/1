@@ -1,7 +1,7 @@
 --
 -- created with TexturePacker - https://www.codeandweb.com/texturepacker
 --
--- $TexturePacker:SmartUpdate:8513559771092f3a8880b1724a518984:c7be78b6f42f98db629a1989b6ced62c:79a7d449c1e774c836646549e5b6049d$
+-- $TexturePacker:SmartUpdate:71a5b58ca831e677ece6fdb6c36a3381:19f41e56b26d8816a0531c23cdd8024a:79a7d449c1e774c836646549e5b6049d$
 --
 -- local sheetInfo = require("mysheet")
 -- local myImageSheet = graphics.newImageSheet( "mysheet.png", sheetInfo:getSheet() )
@@ -18,10 +18,10 @@ SheetInfo.sheet =
             -- 1stone
             x=0,
             y=0,
-            width=125,
-            height=115,
+            width=99,
+            height=135,
 
-            sourceX = 4,
+            sourceX = 18,
             sourceY = 0,
             sourceWidth = 135,
             sourceHeight = 135
@@ -29,7 +29,7 @@ SheetInfo.sheet =
         {
             -- 2stone
             x=0,
-            y=115,
+            y=135,
             width=123,
             height=130,
 
@@ -37,7 +37,7 @@ SheetInfo.sheet =
         {
             -- 3stone
             x=0,
-            y=245,
+            y=265,
             width=123,
             height=130,
 
@@ -45,7 +45,7 @@ SheetInfo.sheet =
         {
             -- beam
             x=0,
-            y=375,
+            y=395,
             width=126,
             height=121,
 
@@ -53,7 +53,7 @@ SheetInfo.sheet =
         {
             -- ship
             x=0,
-            y=496,
+            y=516,
             width=128,
             height=128,
 
@@ -61,7 +61,7 @@ SheetInfo.sheet =
     },
 
     sheetContentWidth = 128,
-    sheetContentHeight = 624
+    sheetContentHeight = 644
 }
 
 SheetInfo.frameIndex =

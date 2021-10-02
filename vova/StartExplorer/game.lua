@@ -15,56 +15,58 @@ physics.setGravity(0,0)
 -- Конфигурация листа изображений
 local sheetOptions =
 {
-  frames = {
+    frames = {
 
-      {
-          -- 1stone
-          x=0,
-          y=0,
-          width=125,
-          height=115,
+        {
+            -- 1stone
+            x=0,
+            y=0,
+            width=99,
+            height=135,
 
-          sourceX = 4,
-          sourceY = 0,
-          sourceWidth = 135,
-          sourceHeight = 135
-      },
-      {
-          -- 2stone
-          x=0,
-          y=115,
-          width=123,
-          height=130,
+            sourceX = 18,
+            sourceY = 0,
+            sourceWidth = 135,
+            sourceHeight = 135
+        },
+        {
+            -- 2stone
+            x=0,
+            y=135,
+            width=123,
+            height=130,
 
-      },
-      {
-          -- 3stone
-          x=0,
-          y=245,
-          width=123,
-          height=130,
+        },
+        {
+            -- 3stone
+            x=0,
+            y=265,
+            width=123,
+            height=130,
 
-      },
-      {
-          -- beam
-          x=0,
-          y=375,
-          width=126,
-          height=121,
+        },
+        {
+            -- beam
+            x=0,
+            y=395,
+            width=126,
+            height=121,
 
-      },
-      {
-          -- ship
-          x=0,
-          y=496,
-          width=128,
-          height=128,
+        },
+        {
+            -- ship
+            x=0,
+            y=516,
+            width=128,
+            height=128,
 
-      },
-  },
-  sheetContentWidth = 128,
-  sheetContentHeight = 624
+        },
+    },
+
+    sheetContentWidth = 128,
+    sheetContentHeight = 644
 }
+
 local objectSheet = graphics.newImageSheet("12.png", sheetOptions)
 
 -- Определение переменных
@@ -83,6 +85,10 @@ local backGroup
 local mainGroup
 local uiGroup
 
+local explosionSound
+local fireSound
+local musicTrack
+
 -- Функция для обновления переменных liveText и scoreText
 local function updateText()
   livesText.text = "Жизни: " .. lives
@@ -91,7 +97,7 @@ end
 
 -- Функция для генерации астероидов
 local function createAsteroid()
-  local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 125, 115)
+  local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 99, 135)
   table.insert(asteroidTable, newAsteroid)
   physics.addBody(newAsteroid, "dynamic", {radius=45, bounce=0.8})
   newAsteroid.myName = "asteroid"
@@ -112,7 +118,7 @@ local function createAsteroid()
     -- Справа
       newAsteroid.x = display.contentWidth + 60
       newAsteroid.y = math.random(500)
-      newAsteroid:setLinearVelocity(math.random(-120,-40), math.random(20,60))
+      newAsteroid:setLinearVelocity(math.random(-120,-20), math.random(20,60))
   end
   -- Вращение
   newAsteroid:applyTorque(math.random(-6,6))
@@ -120,6 +126,7 @@ end
 
 -- Функция лазера
 local function fireLaser()
+  audio.play(fireSound)
   local newLaser = display.newImageRect(mainGroup, objectSheet, 4, 126, 121)
   physics.addBody(newLaser, "dynamic", {isSensor=true})
   newLaser.isBullet = true
@@ -192,7 +199,7 @@ end
 --Функция конца игры
 local function endGame()
 	composer.setVariable("finalScore", score)
-	composer.gotoScene("highScores", {time=800, effect="crossFade"})
+	composer.gotoScene("highscores", {time=800, effect="crossFade"})
 end
 
 -- Функция столкновений
@@ -210,6 +217,9 @@ local function onCollision(event)
       display.remove(obj1)
       display.remove(obj2)
 
+      -- Искусство это ВЗРЫВ
+      audio.play(explosionSound)
+
       for i = #asteroidTable, 1, -1 do
         if (asteroidTable[i] == obj1 or asteroidTable[i] == obj2) then
           table.remove (asteroidTable, i)
@@ -217,7 +227,7 @@ local function onCollision(event)
         end
       end
       -- Увеличивает очки
-      score = score + 1
+      score = score + 100
       scoreText.text = "Счет: " .. score
 
     elseif ((obj1.myName == "ship" and obj2.myName == "asteroid") or
@@ -225,6 +235,7 @@ local function onCollision(event)
     then
       if (died == false) then
         died = true
+        audio.play(explosionSound)
 
         -- Уменьщает жизни при смерти
         lives = lives - 1
@@ -277,11 +288,14 @@ function scene:create( event )
 
 	--Отображение очко и жизень
 	livesText = display.newText(uiGroup, "Жизни: " .. lives, 240, 80, native.systemFont, 36)
-	scoreText = display.newText(uiGroup, "Счет: " .. score, 400, 80, native.systemFont, 36)
+	scoreText = display.newText(uiGroup, "Счет: " .. score, 480, 80, native.systemFont, 36)
 
 	--Создание событий
 	ship:addEventListener("tap", fireLaser) --Запуск функции выстрела лазера нажатии на корабль
 	ship:addEventListener("touch", dragShip) -- Запуск функции смерти при касании корабля другим объектом
+  explosionSound = audio.loadSound("audio/explosion.wav")
+  fireSound = audio.loadSound("audio/fire.wav")
+  musicTrack = audio.loadStream("audio/80s-Space-Game_Looping.wav")
 end
 
 
@@ -299,6 +313,8 @@ function scene:show( event )
 		physics.start()
 		Runtime:addEventListener("collision", onCollision)
 		gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
+    --Музыка фона
+    audio.play(musicTrack, {channel=1, loops=-1})
 	end
 end
 
@@ -317,6 +333,8 @@ function scene:hide( event )
 		-- Code here runs immediately after the scene goes entirely off screen
 		Runtime:removeEventListener ("collision", onCollision)
 		physics.pause()
+    -- Остановка музыки
+    audio.stop(1)
 		composer.removeScene("game")
 	end
 end
@@ -327,7 +345,10 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-
+  -- Освобождаем память от звука
+  audio.dispose(explosionSound)
+  audio.dispose(fireSound)
+  audio.dispose(musicTrack)
 end
 
 

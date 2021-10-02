@@ -3,6 +3,8 @@ local composer = require( "composer" )
 
 local scene = composer.newScene()
 
+local menuSound
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -13,7 +15,7 @@ local function gotoGame()
 end
 
 local function gotoHighScores()
-	composer.gotoScene("highScores", { time=800, effect="crossFade" })
+	composer.gotoScene("highscores", { time=800, effect="crossFade" })
 end
 
 -- -----------------------------------------------------------------------------------
@@ -22,7 +24,7 @@ end
 
 -- create()
 function scene:create( event )
-
+	menuSound = audio.loadStream("audio/Escape_Looping.wav") -- Загрузка музыки меню
 	local sceneGroup = self.view
 	-- Этот код запускается когда сцена первый раз создана, но еще не появилась на экране
 
@@ -59,7 +61,7 @@ function scene:show( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-
+		audio.play(menuSound, {channel=2, loops=-1})
 	end
 end
 
@@ -75,7 +77,7 @@ function scene:hide( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-
+		audio.stop(2)
 	end
 end
 
@@ -85,7 +87,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 	-- Code here runs prior to the removal of scene's view
-
+	audio.dispose = (menuSound)
 end
 
 

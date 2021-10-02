@@ -56,7 +56,7 @@
         <key>jxrCompressionLevel</key>
         <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -82,7 +82,7 @@
         <key>atfFormats</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -181,18 +181,18 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">img/1stone.png</key>
+            <key type="filename">../BalloonTap/1stone.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>spriteScale</key>
-                <double>1.35</double>
+                <double>1.201</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>25,25,50,50</rect>
+                <rect>28,28,56,56</rect>
                 <key>scale9Paddings</key>
-                <rect>25,25,50,50</rect>
+                <rect>28,28,56,56</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -245,11 +245,11 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>img/1stone.png</filename>
             <filename>img/2stone.png</filename>
             <filename>img/3stone.png</filename>
             <filename>img/beam.png</filename>
             <filename>img/ship.png</filename>
+            <filename>../BalloonTap/1stone.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
