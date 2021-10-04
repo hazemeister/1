@@ -82,6 +82,7 @@ local livesText
 local scoreText
 
 local backGroup
+local backGroup1
 local mainGroup
 local uiGroup
 
@@ -89,7 +90,7 @@ local explosionSound
 local fireSound
 local musicTrack
 
--- Функция для обновления переменных liveText и scoreText
+-- Функция для отображения переменных liveText и scoreText
 local function updateText()
   livesText.text = "Жизни: " .. lives
   scoreText.text = "Счет: " .. score
@@ -229,6 +230,24 @@ local function onCollision(event)
       -- Увеличивает очки
       score = score + 100
       scoreText.text = "Счет: " .. score
+        if (score == 1000) then
+          local background1 = display.newImageRect(backGroup, "background1.png", 800, 1400)
+          background1.x = display.contentCenterX
+        	background1.y = display.contentCenterY
+        elseif (score == 2000) then
+          local background2 = display.newImageRect(backGroup, "background2.png", 800, 1400)
+          background2.x = display.contentCenterX
+          background2.y = display.contentCenterY
+        elseif (score == 3500) then
+          local background3 = display.newImageRect(backGroup, "background3.png", 800, 1400)
+          background3.x = display.contentCenterX
+          background3.y = display.contentCenterY
+        elseif (score == 6600) then
+          local background4 = display.newImageRect(backGroup, "background4.png", 800, 1400)
+          background4.x = display.contentCenterX
+          background4.y = display.contentCenterY
+        end
+
 
     elseif ((obj1.myName == "ship" and obj2.myName == "asteroid") or
             (obj1.myName == "asteroid" and obj2.myName == "ship"))
@@ -275,9 +294,10 @@ function scene:create( event )
 	sceneGroup:insert( uiGroup ) -- Вставляем в группу отображения сцены
 
 	--Загрузка обоев
-	local background = display.newImageRect(backGroup, "background.png", 800, 1400)
+
+  local background = display.newImageRect(backGroup, "background.png", 800, 1400)
 	background.x = display.contentCenterX
-	background.y = display.contentCenterY
+  background.y = display.contentCenterY
 
 	--Загрузка Корабля
 	ship = display.newImageRect(mainGroup, objectSheet, 5, 128, 128)
@@ -293,9 +313,9 @@ function scene:create( event )
 	--Создание событий
 	ship:addEventListener("tap", fireLaser) --Запуск функции выстрела лазера нажатии на корабль
 	ship:addEventListener("touch", dragShip) -- Запуск функции смерти при касании корабля другим объектом
-  explosionSound = audio.loadSound("audio/explosion.wav")
-  fireSound = audio.loadSound("audio/fire.wav")
-  musicTrack = audio.loadStream("audio/80s-Space-Game_Looping.wav")
+  explosionSound = audio.loadSound("audio/fuckyou_N4ocxxs.wav")
+  fireSound = audio.loadSound("audio/spank-3.wav")
+  musicTrack = audio.loadSound("audio/thetimewizard11k.wav")
 end
 
 
@@ -315,6 +335,7 @@ function scene:show( event )
 		gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
     --Музыка фона
     audio.play(musicTrack, {channel=1, loops=-1})
+    audio.setVolume(0.5, {channel=1})
 	end
 end
 

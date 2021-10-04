@@ -24,7 +24,7 @@ end
 
 -- create()
 function scene:create( event )
-	menuSound = audio.loadStream("audio/Escape_Looping.wav") -- Загрузка музыки меню
+	menuSound = audio.loadSound("audio/gachiback.wav") -- Загрузка музыки меню
 	local sceneGroup = self.view
 	-- Этот код запускается когда сцена первый раз создана, но еще не появилась на экране
 
@@ -40,10 +40,10 @@ function scene:create( event )
 
 	-- Размещает текстовые кнопки
 	local playButton = display.newText(sceneGroup, "Играть", display.contentCenterX, 700, native.systemFont, 44)
-	playButton:setFillColor(0.82, 0.86, 1)
+	playButton:setFillColor(15/255, 202/255, 212/255)
 
 	local highScoresButton = display.newText(sceneGroup, "Рекорды", display.contentCenterX, 810, native.systemFont, 44)
-	playButton:setFillColor(0.75, 0.78, 1)
+	highScoresButton:setFillColor(227/255, 68/255, 0)
 
 	playButton:addEventListener("tap", gotoGame)
 	highScoresButton:addEventListener("tap", gotoHighScores)
@@ -61,7 +61,8 @@ function scene:show( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-		audio.play(menuSound, {channel=2, loops=-1})
+		audio.play(menuSound, {channel=1, loops=-1})
+		audio.setVolume(1, {channel=1})
 	end
 end
 
@@ -77,7 +78,7 @@ function scene:hide( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
-		audio.stop(2)
+		audio.stop(1)
 	end
 end
 

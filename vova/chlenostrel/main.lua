@@ -10,7 +10,7 @@ math.randomseed(os.time())
 audio.reserveChannels(1)
 
 --Уменьщает громкость музыки на канале
-audio.setVolume(0.1, {channel=1})
+audio.setVolume(1)
 
 --Переход в меню
 composer.gotoScene("menu")

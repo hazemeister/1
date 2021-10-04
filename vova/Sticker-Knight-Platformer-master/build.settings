@@ -1,0 +1,56 @@
+--
+-- For more information on build.settings, see the Project Build Settings guide:
+-- http://docs.coronalabs.com/guide/distribution/buildSettings/index.html
+--
+
+settings = {
+
+	-- Use the "orientation" table to set the default and supported device orientations
+	-- Acceptable values are "portrait", "portraitUpsideDown", "landscapeRight", or "landscapeLeft"
+	orientation = {
+		default = "landscapeRight",
+		supported = { "landscapeRight" }
+	},
+
+	android =
+	{
+		usesPermissions =
+		{
+			"android.permission.INTERNET",
+		},
+	},
+    
+	iphone =
+	{
+		xcassets = "Images.xcassets",
+		plist =
+		{
+			UILaunchStoryboardName = "LaunchScreen",
+			ITSAppUsesNonExemptEncryption = false, -- This sample doesn't use custom encryption
+		},
+	},
+
+	-- This setting can be used to turned on to disable debug symbol stripping altogether
+	build = {
+		--neverStripDebugInfo = true
+	},
+
+	window = {
+		titleText = {
+			-- The "default" text will be used if the system is using a language and/or
+			-- country code not defined. This serves as a fallback mechanism.
+			default = "Sticker Knight",
+		},
+	},
+
+	plugins =
+	{
+
+	},
+
+	--  Files to be excluded are specified per-platform (iOS, Android, or all) using simple pattern
+	--  matching where * means any string of characters, sometimes including /.
+	excludeFiles = {
+
+	},
+}

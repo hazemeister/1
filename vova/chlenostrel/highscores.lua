@@ -55,7 +55,7 @@ end
 -- create()
 function scene:create( event )
 
-highScoreMusic = audio.loadStream("audio/Midnight-Crawlers_Looping.wav") -- Загрузка мызыки в таблицу рекордов
+highScoreMusic = audio.loadSound("audio/boi_SG958v4.wav") -- Загрузка мызыки в таблицу рекордов
 	local sceneGroup = self.view
 	-- Code here runs when the scene is first created but has not yet appeared on screen
 
@@ -107,7 +107,8 @@ function scene:show( event )
 
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
-		audio.play(highScoreMusic, {channel=3, loops=-1})
+		audio.play(highScoreMusic, {channel=1, loops=-1})
+		audio.setVolume(0.8, {channel=1})
 	end
 end
 
@@ -124,7 +125,7 @@ function scene:hide( event )
 	elseif ( phase == "did" ) then
 		-- Code here runs immediately after the scene goes entirely off screen
 		composer.removeScene("highScores")
-		audio.stop(3)
+		audio.stop(1)
 	end
 end
 
