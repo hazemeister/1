@@ -12,10 +12,10 @@ physics.setGravity(0, 0)
 math.randomseed(os.time())
 
 --config listov izobrajeniy
-local sheetOptions = 
+local sheetOptions =
 {
     frames = {
-    
+
     { -- asteroid 1
                 x = 0,
                 y = 0,
@@ -90,7 +90,14 @@ end
 
 --asteroidi
 local function createAsteroid()
+  local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 99, 135)
+  table.insert(asteroidTable, newAsteroid)
+  physics.addBody(newAsteroid, "dynamic", {radius=45, bounce=0.8})
+  newAsteroid.myName = "asteroid"
+-- Функция спавна астероидов
+  local whereFrom = math.random(3)
 
+<<<<<<< HEAD
     local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 102, 85)
     table.insert( asteroidsTable, newAsteroid )
     physics.addBody( newAsteroid, "dynamic", { radius=40, bounce=0.8 } )
@@ -114,7 +121,29 @@ local function createAsteroid()
         newAsteroid:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
     end
         newAsteroid:applyTorque(math.random(-6,6))
+=======
+  if(whereFrom == 1) then
+    -- Слева
+      newAsteroid.x = -60
+      newAsteroid.y = math.random(500)
+      newAsteroid:setLinearVelocity(math.random(40,120), math.random(20,60))
+  elseif(whereFrom == 2) then
+    -- Сверху
+      newAsteroid.x = math.random(display.contentWidth)
+      newAsteroid.y = -60
+      newAsteroid:setLinearVelocity(math.random(-40,40), math.random(40,120))
+  elseif(whereFrom == 3) then
+    -- Справа
+      newAsteroid.x = display.contentWidth + 60
+      newAsteroid.y = math.random(500)
+      newAsteroid:setLinearVelocity(math.random(-120,-20), math.random(20,60))
+  end
+  -- Вращение
+  newAsteroid:applyTorque(math.random(-6,6))
+>>>>>>> 6a1fe548313fc0ccc137d4043f66589944303460
 end
+
+
 --laser
 local function fireLaser()
     local newLaser = display.newImageRect(mainGroup, objectSheet, 5, 14, 40)
@@ -129,6 +158,7 @@ local function fireLaser()
 end
 ship:addEventListener("tap", fireLaser)
 
+<<<<<<< HEAD
 --peretyagivaniye koroblya
 local function dragShip (event)
     local ship = event.target
@@ -227,3 +257,8 @@ end
 
 Runtime:addEventListener("collision", onCollision)
 
+=======
+
+--Создание нового астероида
+createAsteroid()
+>>>>>>> 6a1fe548313fc0ccc137d4043f66589944303460
