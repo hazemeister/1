@@ -92,6 +92,28 @@ end
 local function createAsteroid()
 
     local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 102, 85)
+    table.insert( asteroidsTable, newAsteroid )
+    physics.addBody( newAsteroid, "dynamic", { radius=40, bounce=0.8 } )
+    newAsteroid.myName = "asteroid"
+ 
+    local whereFrom = math.random( 3 )
+    if (whereFrom == 1) then
+            --sleva
+        newAsteroid.x = -60
+        newAsteroid.y = math.random(500)
+        newAsteroid:setLinearVelocity(math.random(40,120), math.random (20,60))
+    elseif ( whereFrom == 2 ) then
+        -- From the top
+        newAsteroid.x = math.random( display.contentWidth )
+        newAsteroid.y = -60
+        newAsteroid:setLinearVelocity( math.random( -40,40 ), math.random( 40,120 ) )
+    elseif ( whereFrom == 3 ) then
+        -- From the right
+        newAsteroid.x = display.contentWidth + 60
+        newAsteroid.y = math.random( 500 )
+        newAsteroid:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
+    end
+        newAsteroid:applyTorque(math.random(-6,6))
 end
 --laser
 local function fireLaser()
@@ -106,3 +128,102 @@ local function fireLaser()
             onComplete = function() display.remove (newLaser) end})
 end
 ship:addEventListener("tap", fireLaser)
+
+--peretyagivaniye koroblya
+local function dragShip (event)
+    local ship = event.target
+    local phase = event.phase
+    if ("began" == phase) then
+        --pri kasanii focus na korable
+        display.currentStage:setFocus (ship)
+        ship.touchOffsetX = event.x - ship.x
+
+    elseif ("moved" == phase) then
+        --peremeshenie korablya
+        ship.x = event.x - ship.touchOffsetX
+    elseif ("ended" == phase or "cancelled" == phase) then
+        --otmena ksaniya
+        display.currentStage:setFocus (nil)
+    end
+    return true -- komanda kasaniya imenno na etom obyekte
+end
+ship:addEventListener("touch", dragShip)
+
+--igrovoy cikl
+local function gameLoop()
+    --vizov asteroidov
+    createAsteroid()
+    --udalenie astroidov
+    for i = #asteroidsTable, 1, -1 do
+        local thisAsteroid = asteroidsTable[i]
+
+        if (thisAsteroid.x < -100 or
+            thisAsteroid.x > display.contentWidth +100 or
+            thisAsteroid.y < -100 or
+            thisAsteroid.y > display.contentHeight +100)
+            then
+                display.remove(thisAsteroid)
+                table.remov(asteroidsTable, i)
+            end
+    end
+end
+--timer igri
+gameLoopTimer = timer.performWithDelay(500, gameLoop, 0)
+
+local function restoreShip()
+    ship.isBodyActive = false
+    ship.x = display.contentCenterX
+    ship.y = display.contentHeight -100
+
+    transition.to(ship, {alpha=1, time = 4000,
+            onComplete = function()
+                ship.isBodyActive = true
+                died = false
+            end})
+        end
+
+        --funkciuya stolknoveniya
+local function onCollision (event)
+    if (event.phase == "began") then
+        local obj1 = event.object1
+        local obj2 = event.object2
+
+        if ((obj1.myName == "laser" and obj2.myName == "asteroid") or
+                (obj1.myName == "asteroid" and obj2.myName == "laser"))
+                then
+                    --udalenie lasera i asteroida
+                    display.remove(obj1)
+                    display.remove(obj2)
+
+                    for i = #asteroidsTable, 1, -1 do
+                        if (asteroidsTable[i] == obj1 or asteroidsTable[i] == obj2) then
+                            table.remove(asteroidsTable, i)
+                            break
+                        end
+                end
+                --uvelichenie scheta
+                score = score + 100
+                scoreText.text = "Score: " .. score
+
+            elseif ( ( obj1.myName == "ship" and obj2.myName == "asteroid" ) or
+            ( obj1.myName == "asteroid" and obj2.myName == "ship" ) )
+             then
+                if (died == false) then
+                    died = true
+                    --obnovlenie jizney
+                    lives = lives -1
+                    livesText.text = "lives: " .. lives
+
+                    if (lives == 0) then
+                        display.remove (ship)
+                    else
+                        ship.alpha = 0
+                        timer.performWithDelay(1000, restoreShip)
+                    end
+                end
+            end
+    end
+end
+
+Runtime:addEventListener("collision", onCollision)
+
