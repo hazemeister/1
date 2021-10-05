@@ -58,7 +58,7 @@ local objectSheet = graphics.newImageSheet( "gameObjects.png", sheetOptions)
 local lives = 3
 local score = 0
 local died = false
-local asteroidsTable = {}
+local asteroidTable = {}
 
 local ship
 local gameLoopTimer
@@ -154,8 +154,8 @@ local function gameLoop()
     --vizov asteroidov
     createAsteroid()
     --udalenie astroidov
-    for i = #asteroidsTable, 1, -1 do
-        local thisAsteroid = asteroidsTable[i]
+    for i = #asteroidTable, 1, -1 do
+        local thisAsteroid = asteroidTable[i]
 
         if (thisAsteroid.x < -100 or
             thisAsteroid.x > display.contentWidth +100 or
@@ -163,7 +163,7 @@ local function gameLoop()
             thisAsteroid.y > display.contentHeight +100)
             then
                 display.remove(thisAsteroid)
-                table.remov(asteroidsTable, i)
+                table.remove(asteroidTable, i)
             end
     end
 end
@@ -195,9 +195,9 @@ local function onCollision (event)
                     display.remove(obj1)
                     display.remove(obj2)
 
-                    for i = #asteroidsTable, 1, -1 do
-                        if (asteroidsTable[i] == obj1 or asteroidsTable[i] == obj2) then
-                            table.remove(asteroidsTable, i)
+                    for i = #asteroidTable, 1, -1 do
+                        if (asteroidTable[i] == obj1 or asteroidTable[i] == obj2) then
+                            table.remove(asteroidTable, i)
                             break
                         end
                 end
