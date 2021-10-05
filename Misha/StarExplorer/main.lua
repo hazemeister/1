@@ -91,7 +91,7 @@ end
 --asteroidi
 local function createAsteroid()
   local newAsteroid = display.newImageRect(mainGroup, objectSheet, 1, 99, 135)
-  table.insert(asteroidTable, newAsteroid)
+  table.insert(asteroidsTable, newAsteroid)
   physics.addBody(newAsteroid, "dynamic", {radius=45, bounce=0.8})
   newAsteroid.myName = "asteroid"
 
@@ -163,7 +163,7 @@ local function gameLoop()
             thisAsteroid.y > display.contentHeight +100)
             then
                 display.remove(thisAsteroid)
-                table.remov(asteroidsTable, i)
+                table.remove(asteroidsTable, i)
             end
     end
 end
